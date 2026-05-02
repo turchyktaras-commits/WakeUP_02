@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Профіль — WakeUp</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .profile-top { display:flex; align-items:center; gap:1.5rem; margin-bottom:2rem; flex-wrap:wrap; }
+    .avatar { width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,var(--accent),#a78bfa); display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:700; color:#fff; flex-shrink:0; }
+    .profile-name { font-size:1.5rem; font-weight:700; letter-spacing:-.02em; }
+    .profile-email { color:var(--text2); font-size:.9rem; margin-top:4px; }
+    .profile-joined { color:var(--text3); font-size:.8rem; margin-top:2px; }
+    .stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:2rem; }
+    .stat-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem; text-align:center; }
+    .stat-num { font-size:2rem; font-weight:700; font-family:"Space Mono",monospace; color:var(--accent2); }
+    .stat-label { font-size:.8rem; color:var(--text3); margin-top:4px; }
+    .section-title { font-size:.8rem; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.75rem; }
+    .status-row { display:flex; align-items:center; gap:8px; }
+    .status-dot { width:8px; height:8px; border-radius:50%; background:var(--success); box-shadow:0 0 6px var(--success); }
+    .edit-btn-row { display:flex; justify-content:flex-end; gap:.75rem; margin-top:1.5rem; }
+
+    .edit-overlay {
+      display:none; position:fixed; inset:0;
+      background:rgba(0,0,0,.75); z-index:999;
+      align-items:center; justify-content:center;
+      backdrop-filter:blur(4px); padding:1rem;
+    }
+    .edit-overlay.show { display:flex; }
+    .edit-modal {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius); padding:2rem;
+      width:100%; max-width:460px;
+      animation:pop-in .25s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes pop-in { from{transform:scale(.9);opacity:0} to{transform:scale(1);opacity:1} }
+    .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; }
+    .modal-title { font-size:1.1rem; font-weight:700; }
+    .modal-close { background:none; border:none; color:var(--text3); font-size:1.25rem; cursor:pointer; padding:4px; border-radius:6px; line-height:1; }
+    .modal-close:hover { color:var(--text); background:var(--bg3); }
+    .modal-footer { display:flex; gap:.75rem; justify-content:flex-end; margin-top:1.5rem; }
+
+    @media(max-width:600px){ .stats-grid{gap:.5rem;} .stat-num{font-size:1.5rem;} }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">⏰</div>WakeUp</a>
+    <nav>
+      <a href="index.html">Будильники</a>
+      <a href="profile.html" class="active">Профіль</a>
+      <a href="about.html">Про додаток</a>
+      <a href="login.html" id="logoutBtn" class="btn btn-secondary btn-sm" style="margin-left:4px;">Вийти</a>
+    </nav>
+    <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Будильники</a>
+  <a href="profile.html" class="active">Профіль</a>
+  <a href="about.html">Про додаток</a>
+  <a href="login.html">Вийти</a>
+</div>
+
+<main>
+  <div class="page-header"><h1>Мій профіль</h1><p>Ваші персональні дані та налаштування акаунту</p></div>
+
+  <div class="card" style="margin-bottom:1.5rem;">
+    <div class="profile-top">
+      <div class="avatar" id="profileAvatar">?</div>
+      <div>
+        <div class="profile-name" id="profileName">—</div>
+        <div class="profile-email" id="profileEmail">—</div>
+        <div class="profile-joined">Зареєстровано: <span id="profileCreatedAt">—</span></div>
+      </div>
+      <div style="margin-left:auto;"><div class="status-row"><span class="status-dot"></span><span class="badge badge-active">Активний</span></div></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Будильників</div></div>
+      <div class="stat-card"><div class="stat-num" id="statActive">0</div><div class="stat-label">Активних</div></div>
+      <div class="stat-card"><div class="stat-num">✓</div><div class="stat-label">Акаунт</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem;">
+    <p class="section-title">Особисті дані</p>
+    <table class="profile-table">
+      <tr><td>Повне імʼя</td><td id="profileNameT">—</td></tr>
+      <tr><td>Електронна пошта</td><td id="profileEmailT">—</td></tr>
+      <tr><td>Стать</td><td id="profileGender">—</td></tr>
+      <tr><td>Дата народження</td><td id="profileDob">—</td></tr>
+      <tr><td>Вік</td><td id="profileAge">—</td></tr>
+      <tr><td>Дата реєстрації</td><td id="profileCreatedAtT">—</td></tr>
+    </table>
+  </div>
+
+  <div class="card" style="margin-bottom:1.5rem;">
+    <p class="section-title">Налаштування</p>
+    <table class="profile-table">
+      <tr><td>Мова інтерфейсу</td><td>Українська</td></tr>
+      <tr><td>Часовий пояс</td><td>Europe/Kyiv (UTC+3)</td></tr>
+      <tr><td>Формат часу</td><td>24-годинний</td></tr>
+      <tr><td>Сповіщення</td><td><span class="badge badge-active">Увімкнено</span></td></tr>
+    </table>
+    <div class="edit-btn-row">
+      <button class="btn btn-primary" id="editProfileBtn">✏️ Редагувати профіль</button>
+    </div>
+  </div>
+
+  <div class="card" style="border-color:rgba(248,113,113,.3);">
+    <p class="section-title" style="color:var(--danger);">Небезпечна зона</p>
+    <p style="font-size:.9rem;color:var(--text2);margin-bottom:1rem;">Видалення акаунту незворотнє. Всі будильники будуть втрачені.</p>
+    <button class="btn btn-danger btn-sm" id="deleteAccountBtn">Видалити акаунт</button>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>© 2025 WakeUp</span>
+  </div>
+</footer>
+
+<div class="edit-overlay" id="editOverlay">
+  <div class="edit-modal">
+    <div class="modal-header">
+      <span class="modal-title">✏️ Редагувати профіль</span>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+
+    <div id="editError" class="alert alert-error" style="display:none;"></div>
+
+    <form id="editForm">
+      <div class="form-group">
+        <label for="editName">Повне імʼя</label>
+        <input type="text" id="editName" placeholder="Ваше імʼя" required>
+      </div>
+      <div class="form-group">
+        <label for="editEmail">Електронна пошта</label>
+        <input type="email" id="editEmail" placeholder="your@email.com" required>
+      </div>
+      <div class="form-group">
+        <label>Стать</label>
+        <div class="radio-group">
+          <label class="radio-label"><input type="radio" name="editGender" value="male">Чоловік</label>
+          <label class="radio-label"><input type="radio" name="editGender" value="female">Жінка</label>
+          <label class="radio-label"><input type="radio" name="editGender" value="other">Інше</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="editDob">Дата народження</label>
+        <input type="date" id="editDob" required>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="modalCancelBtn">Скасувати</button>
+        <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/storage.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/profile.js"></script>
+<script>
+  document.getElementById('hamburgerBtn').addEventListener('click', () => {
+    document.getElementById('mobileNav').classList.toggle('open');
+  });
+  document.getElementById('logoutBtn').addEventListener('click', (e) => {
+    e.preventDefault(); Auth.logout(); window.location.href = 'login.html';
+  });
+</script>
+</body>
+</html>

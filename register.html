@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Реєстрація — WakeUp</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .auth-wrap { min-height:calc(100vh - 128px); display:flex; align-items:center; justify-content:center; padding:2rem 1rem; }
+    .auth-card { width:100%; max-width:440px; }
+    .auth-title { font-size:1.5rem; font-weight:700; letter-spacing:-.03em; margin-bottom:.4rem; }
+    .auth-subtitle { color:var(--text2); font-size:.9rem; margin-bottom:2rem; }
+    .brand-bar { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:2rem; }
+    .brand-bar .logo-icon { width:44px; height:44px; font-size:22px; }
+    .brand-name { font-size:1.5rem; font-weight:700; letter-spacing:-.03em; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">⏰</div>WakeUp</a>
+    <nav>
+      <a href="register.html" class="active">Реєстрація</a>
+      <a href="login.html">Увійти</a>
+      <a href="about.html">Про додаток</a>
+    </nav>
+    <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<div class="mobile-nav" id="mobileNav">
+  <a href="register.html" class="active">Реєстрація</a>
+  <a href="login.html">Увійти</a>
+  <a href="about.html">Про додаток</a>
+</div>
+<main style="padding:0;">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="brand-bar"><div class="logo-icon">⏰</div><span class="brand-name">WakeUp</span></div>
+      <div class="card">
+        <h1 class="auth-title">Створити акаунт</h1>
+        <p class="auth-subtitle">Приєднуйтесь до WakeUp — ніколи не проспите знову</p>
+        <div id="registerError" class="alert alert-error" style="display:none;"></div>
+        <div id="registerSuccess" class="alert alert-success" style="display:none;"></div>
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="name">Повне імʼя</label>
+            <input type="text" id="name" placeholder="Тарас Турчик" required autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="email">Електронна пошта</label>
+            <input type="email" id="email" placeholder="your@email.com" required autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label>Стать</label>
+            <div class="radio-group">
+              <label class="radio-label"><input type="radio" name="gender" value="male" checked>Чоловік</label>
+              <label class="radio-label"><input type="radio" name="gender" value="female">Жінка</label>
+              <label class="radio-label"><input type="radio" name="gender" value="other">Інше</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="dob">Дата народження</label>
+            <input type="date" id="dob" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" placeholder="Мінімум 6 символів" required autocomplete="new-password">
+          </div>
+          <div class="form-group">
+            <label for="password2">Підтвердіть пароль</label>
+            <input type="password" id="password2" placeholder="Повторіть пароль" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" style="margin-top:.5rem;">Зареєструватися →</button>
+        </form>
+        <hr class="divider">
+        <p style="text-align:center;font-size:.9rem;color:var(--text2);">Вже є акаунт? <a href="login.html" class="link">Увійти</a></p>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-inner">
+    <span>© 2025 WakeUp</span>
+  </div>
+</footer>
+<script src="js/storage.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/register.js"></script>
+<script>
+  document.getElementById('hamburgerBtn').addEventListener('click', () => {
+    document.getElementById('mobileNav').classList.toggle('open');
+  });
+</script>
+</body>
+</html>

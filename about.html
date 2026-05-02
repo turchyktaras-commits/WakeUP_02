@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Про додаток — WakeUp</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .about-hero { text-align:center; padding:3.5rem 2rem; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:2rem; position:relative; overflow:hidden; }
+    .about-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at center,rgba(108,99,255,.15) 0%,transparent 70%); pointer-events:none; }
+    .app-logo-big { width:96px; height:96px; background:linear-gradient(135deg,#6c63ff,#a78bfa); border-radius:24px; display:flex; align-items:center; justify-content:center; font-size:48px; margin:0 auto 1.5rem; box-shadow:0 12px 40px rgba(108,99,255,.35); }
+    .app-name { font-size:2.5rem; font-weight:700; letter-spacing:-.04em; margin-bottom:.5rem; }
+    .app-tagline { color:var(--text2); font-size:1.1rem; margin-bottom:1.5rem; }
+    .version-badge { display:inline-block; background:rgba(108,99,255,.15); color:var(--accent2); border:1px solid rgba(108,99,255,.3); padding:4px 14px; border-radius:20px; font-size:.85rem; font-family:"Space Mono",monospace; }
+    .features-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin-bottom:2rem; }
+    .feature-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1.25rem; display:flex; gap:1rem; align-items:flex-start; }
+    .feature-icon { font-size:1.75rem; flex-shrink:0; width:44px; height:44px; background:var(--bg3); border-radius:10px; display:flex; align-items:center; justify-content:center; }
+    .feature-title { font-weight:600; font-size:.95rem; margin-bottom:4px; }
+    .feature-desc { font-size:.85rem; color:var(--text2); line-height:1.5; }
+    .tech-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:.75rem; }
+    .tech-chip { background:var(--bg3); border:1px solid var(--border); color:var(--text2); padding:4px 12px; border-radius:20px; font-size:.8rem; font-family:"Space Mono",monospace; }
+    .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:2rem; }
+    .info-item-label { font-size:.8rem; color:var(--text3); text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px; }
+    .info-item-val { font-size:.95rem; font-weight:500; }
+    .section-title { font-size:.8rem; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:.08em; margin-bottom:.75rem; }
+    @media(max-width:600px){ .features-grid{grid-template-columns:1fr;} .info-grid{grid-template-columns:1fr;} .app-name{font-size:2rem;} }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">⏰</div>WakeUp</a>
+    <nav>
+      <a href="index.html">Будильники</a>
+      <a href="profile.html">Профіль</a>
+      <a href="about.html" class="active">Про додаток</a>
+    </nav>
+    <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html">Будильники</a>
+  <a href="profile.html">Профіль</a>
+  <a href="about.html" class="active">Про додаток</a>
+</div>
+<main>
+  <div class="about-hero">
+    <div class="app-logo-big">⏰</div>
+    <h1 class="app-name">WakeUp</h1>
+    <p class="app-tagline">Розумний будильник для сучасного ритму життя</p>
+    <span class="version-badge">v2.2.8</span>
+  </div>
+  <div class="card" style="margin-bottom:2rem;">
+    <p class="section-title">Про додаток</p>
+    <p style="font-size:1rem;line-height:1.8;color:var(--text2);margin-bottom:1rem;"><strong style="color:var(--text);">WakeUp</strong> — веб-додаток для керування будильниками. Реалізований за шаблоном MVC (Model–View–Controller) з використанням чистого JavaScript без фреймворків.</p>
+    <p style="font-size:1rem;line-height:1.8;color:var(--text2);">Дані зберігаються у localStorage браузера. Підтримує реєстрацію та авторизацію користувачів, повторення будильників за днями тижня, браузерні push-сповіщення та функцію відкладання.</p>
+  </div>
+  <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">Основні можливості</h2>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon">➕</div><div><div class="feature-title">Додавання будильників</div><div class="feature-desc">Необмежена кількість із назвою та часом</div></div></div>
+    <div class="feature-card"><div class="feature-icon">🔁</div><div><div class="feature-title">Повторення</div><div class="feature-desc">За конкретними днями тижня або щодня</div></div></div>
+    <div class="feature-card"><div class="feature-icon">⏸</div><div><div class="feature-title">Пауза та вимкнення</div><div class="feature-desc">Перемикання одним натисканням</div></div></div>
+    <div class="feature-card"><div class="feature-icon">🔔</div><div><div class="feature-title">Push-сповіщення</div><div class="feature-desc">Браузерні сповіщення при спрацюванні</div></div></div>
+    <div class="feature-card"><div class="feature-icon">💾</div><div><div class="feature-title">localStorage</div><div class="feature-desc">Дані зберігаються між сесіями</div></div></div>
+    <div class="feature-card"><div class="feature-icon">👤</div><div><div class="feature-title">Авторизація</div><div class="feature-desc">Реєстрація та вхід користувачів</div></div></div>
+  </div>
+  <div class="card" style="margin-bottom:2rem;">
+    <p class="section-title">Архітектура</p>
+    <div class="info-grid">
+      <div><div class="info-item-label">Патерн</div><div class="info-item-val">MVC</div></div>
+      <div><div class="info-item-label">Версія</div><div class="info-item-val mono">2.2.8</div></div>
+      <div><div class="info-item-label">Сховище</div><div class="info-item-val">localStorage</div></div>
+      <div><div class="info-item-label">Платформа</div><div class="info-item-val">Web (браузер)</div></div>
+    </div>
+    <hr class="divider">
+    <p class="section-title">Технології</p>
+    <div class="tech-list">
+      <span class="tech-chip">HTML5</span>
+      <span class="tech-chip">CSS3</span>
+      <span class="tech-chip">JavaScript ES6+</span>
+      <span class="tech-chip">MVC Pattern</span>
+    </div>
+  </div>
+  <div style="text-align:center;padding:1rem 0;">
+    <a href="index.html" class="btn btn-primary" style="font-size:1rem;padding:12px 32px;">Відкрити будильники →</a>
+  </div>
+</main>
+<footer>
+  <div class="footer-inner">
+    <span>© 2026 WakeUp </span>
+  </div>
+</footer>
+<script src="js/storage.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  document.getElementById('hamburgerBtn').addEventListener('click', () => {
+    document.getElementById('mobileNav').classList.toggle('open');
+  });
+</script>
+</body>
+</html>

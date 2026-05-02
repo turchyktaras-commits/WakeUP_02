@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Будильники — WakeUp</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .clock-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:2rem; text-align:center; margin-bottom:2rem; position:relative; overflow:hidden; }
+    .clock-card::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at top,rgba(108,99,255,.1) 0%,transparent 60%); pointer-events:none; }
+    .clock-time { font-family:'Space Mono',monospace; font-size:clamp(3rem,10vw,5.5rem); font-weight:700; letter-spacing:-.02em; color:var(--text); line-height:1; margin-bottom:.5rem; }
+    .clock-date { color:var(--text2); font-size:.95rem; }
+    .clock-seconds { font-size:.5em; color:var(--accent2); vertical-align:super; margin-left:4px; font-weight:400; }
+    .add-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; margin-bottom:2rem; }
+    .add-card h2 { font-size:1rem; font-weight:600; margin-bottom:1.25rem; }
+    .add-form-row { display:grid; grid-template-columns:1fr 2fr auto; gap:12px; align-items:end; }
+    .days-row { display:flex; gap:6px; flex-wrap:wrap; margin-top:1rem; }
+    .day-btn { width:36px; height:36px; border-radius:50%; border:1px solid var(--border); background:var(--bg3); color:var(--text2); font-size:.75rem; font-weight:600; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; }
+    .day-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .day-btn:hover:not(.active) { border-color:var(--accent); color:var(--text); }
+    .alarms-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem; }
+    .alarms-header h2 { font-size:1rem; font-weight:600; }
+    .alarm-count { font-size:.8rem; color:var(--text3); }
+    .alarm-list { display:flex; flex-direction:column; gap:10px; }
+    .alarm-item { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:1rem 1.25rem; display:flex; align-items:center; gap:1rem; transition:border-color .2s; }
+    .alarm-item:hover { border-color:rgba(108,99,255,.4); }
+    .alarm-item.inactive { opacity:.5; }
+    .alarm-time-big { font-family:'Space Mono',monospace; font-size:1.5rem; font-weight:700; min-width:80px; letter-spacing:-.02em; }
+    .alarm-details { flex:1; }
+    .alarm-name { font-weight:600; font-size:.95rem; margin-bottom:3px; }
+    .alarm-days { font-size:.8rem; color:var(--text3); }
+    .alarm-toggle { width:44px; height:24px; border-radius:12px; background:var(--bg3); border:1px solid var(--border); cursor:pointer; position:relative; transition:background .2s; flex-shrink:0; }
+    .alarm-toggle.on { background:var(--accent); border-color:var(--accent); }
+    .alarm-toggle::after { content:''; position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%; background:#fff; transition:transform .2s; }
+    .alarm-toggle.on::after { transform:translateX(20px); }
+    .alarm-del { background:none; border:none; color:var(--text3); cursor:pointer; font-size:1.1rem; padding:4px; border-radius:6px; transition:color .2s; flex-shrink:0; }
+    .alarm-del:hover { color:var(--danger); background:rgba(248,113,113,.1); }
+    .ring-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:999; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+    .ring-overlay.show { display:flex; }
+    .ring-modal { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:2.5rem; text-align:center; max-width:360px; width:90%; animation:pop-in .3s cubic-bezier(.34,1.56,.64,1); }
+    @keyframes pop-in { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
+    .ring-icon { font-size:3.5rem; animation:shake .5s infinite; margin-bottom:1rem; }
+    @keyframes shake { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-15deg)} 75%{transform:rotate(15deg)} }
+    .ring-time { font-family:'Space Mono',monospace; font-size:3rem; font-weight:700; color:var(--warning); margin-bottom:.5rem; }
+    .ring-name { color:var(--text2); margin-bottom:1.75rem; font-size:1rem; }
+    .empty-state { text-align:center; padding:3rem 1rem; color:var(--text3); }
+    .empty-icon { font-size:3rem; margin-bottom:1rem; opacity:.5; }
+    .empty-text { font-size:.95rem; }
+    @media(max-width:640px){ .add-form-row{grid-template-columns:1fr 1fr} .add-form-row .btn{grid-column:1/-1} }
+    @media(max-width:480px){ .add-form-row{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo"><div class="logo-icon">⏰</div>WakeUp</a>
+    <nav>
+      <a href="index.html" class="active">Будильники</a>
+      <a href="profile.html">Профіль</a>
+      <a href="about.html">Про додаток</a>
+      <a href="login.html" id="logoutLink" class="btn btn-secondary btn-sm" style="margin-left:4px;">Вийти</a>
+    </nav>
+    <button class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html" class="active">Будильники</a>
+  <a href="profile.html">Профіль</a>
+  <a href="about.html">Про додаток</a>
+  <a href="login.html">Вийти</a>
+</div>
+<main>
+  <div class="clock-card">
+    <div class="clock-time"><span id="clockHM">00:00</span><span class="clock-seconds" id="clockS">00</span></div>
+    <div class="clock-date" id="clockDate">Завантаження...</div>
+  </div>
+  <div class="add-card">
+    <h2>➕ Новий будильник</h2>
+    <div class="add-form-row">
+      <div class="form-group" style="margin:0;"><label for="alarmTime">Час</label><input type="time" id="alarmTime" value="07:00"></div>
+      <div class="form-group" style="margin:0;"><label for="alarmName">Назва (необов'язково)</label><input type="text" id="alarmName" placeholder="Прокидання, Робота..."></div>
+      <button class="btn btn-primary" id="addAlarmBtn">Додати</button>
+    </div>
+    <div>
+      <label style="display:block;margin-top:1rem;margin-bottom:6px;font-size:.85rem;color:var(--text2);">Повторення</label>
+      <div class="days-row" id="daysRow">
+        <button class="day-btn active" data-d="1">Пн</button>
+        <button class="day-btn active" data-d="2">Вт</button>
+        <button class="day-btn active" data-d="3">Ср</button>
+        <button class="day-btn active" data-d="4">Чт</button>
+        <button class="day-btn active" data-d="5">Пт</button>
+        <button class="day-btn" data-d="6">Сб</button>
+        <button class="day-btn" data-d="0">Нд</button>
+      </div>
+    </div>
+  </div>
+  <div class="alarms-header">
+    <h2>Мої будильники</h2>
+    <span class="alarm-count" id="alarmCount">0 будильників</span>
+  </div>
+  <div class="alarm-list" id="alarmList"></div>
+</main>
+<footer>
+  <div class="footer-inner">
+    <span>© 2025 WakeUp</span>
+  </div>
+</footer>
+<div class="ring-overlay" id="ringOverlay">
+  <div class="ring-modal">
+    <div class="ring-icon">🔔</div>
+    <div class="ring-time" id="ringTime">07:00</div>
+    <div class="ring-name" id="ringName">Будильник</div>
+    <button class="btn btn-primary btn-full" id="dismissBtn" style="margin-bottom:10px;">Вимкнути</button>
+    <button class="btn btn-secondary btn-full" id="snoozeBtn">Відкласти на 5 хв</button>
+  </div>
+</div>
+<script src="js/storage.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/alarm-model.js"></script>
+<script src="js/alarm-view.js"></script>
+<script src="js/alarm-controller.js"></script>
+<script>
+  'use strict';
+  const model = new AlarmModel();
+  const view = new AlarmView();
+  const controller = new AlarmController(model, view);
+  controller.init();
+  document.getElementById('hamburgerBtn').addEventListener('click', () => {
+    document.getElementById('mobileNav').classList.toggle('open');
+  });
+  document.getElementById('logoutLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    Auth.logout();
+    window.location.href = 'login.html';
+  });
+</script>
+</body>
+</html>
